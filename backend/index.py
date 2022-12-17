@@ -1,19 +1,23 @@
 '''
 This is the connecting point with the front-end. This file routes further routes to calculte optimal path with given elevation and percent increase in distance.
 '''
+from http.client import NETWORK_AUTHENTICATION_REQUIRED
 from flask import Flask
 from flask_cors import CORS
 import osmnx
+import networkx
 from networkx import single_source_dijkstra
-from controller.routing import get_dijkstra_route
+from controller.routing import get_dijkstra_route, get_a_star
 from model.gather_data import store_node_elevations 
 from flask import request
 from flask import jsonify
+import pickle as p
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/path', methods=['POST'])
+@app.route('/route', methods=['POST'])
 def get_route():
     try:
         request_info = request.json
@@ -27,6 +31,7 @@ def get_route():
         return error_message
 
     result = get_route_details(source, destination, place, percent, route_type)
+    #result=a_star(source,destination,place)
     result = jsonify(result)
     return result
 
@@ -61,7 +66,9 @@ def get_route_details(source, destination, place, percent, route_type):
     source_node = osmnx.nearest_nodes(graph_with_elevations, X=source_longitude, Y=source_latitude)
     destination_node = osmnx.nearest_nodes(graph_with_elevations, X=destination_longitude, Y=destination_latitude)
     dijkstra_distance = single_source_dijkstra(graph_with_elevations, source_node, destination_node, weight='length')
+    path_nodes = get_a_star(graph_with_elevations, source_node, destination_node, dijkstra_distance[0] * percent/100, route_type)
     path_nodes, path_distance, path_elevation = get_dijkstra_route(graph_with_elevations, source_node, destination_node, dijkstra_distance[0] * percent/100, route_type)
+    
 
     graph_nodes = graph_with_elevations.nodes()
     node_distances = [0.0]
@@ -75,9 +82,9 @@ def get_route_details(source, destination, place, percent, route_type):
 
     for i in range(len(result)):
         if i>1:
-            result[i]['distance_till_now'] = result[i-1]['distance_till_now']+node_distances[i]
+            result[i]['dist_from_start'] = result[i-1]['dist_from_start']+node_distances[i]
         else:
-            result[i]['distance_till_now'] = node_distances[i]
+            result[i]['dist_from_start'] = node_distances[i]
     return result, path_distance, path_elevation
 
 if __name__ == "__main__":
