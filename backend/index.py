@@ -85,7 +85,7 @@ def get_route_details(source, destination, place, percent, route_type):
 
     for i in range(len(result)):
         if i>1:
-            result[i]['dist_from_start'] = result[i-1]['dist_from_start']+node_distances[i]
+            result[i]['dist_uptill_now'] = result[i-1]['dist_uptill_now']+node_distances[i]
         else:
             result[i]['dist_from_start'] = node_distances[i]
     return result, path_distance, path_elevation
