@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 
 """
-This function models the grafh with the elevation of the points from the open-elevation api
+This function models the graph with the elevation of the points from the open-elevation api
 """
 
 def store_node_elevations(g):
