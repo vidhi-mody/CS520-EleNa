@@ -2,6 +2,11 @@ import json
 import requests, networkx
 from collections import OrderedDict
 
+
+"""
+This function models the grafh with the elevation of the points from the open-elevation api
+"""
+
 def store_node_elevations(g):
     nodes = OrderedDict(g.nodes(data=True))
     node_points = [{'latitude': nodes[key]['y'], 'longitude': nodes[key]['x']} for key in OrderedDict(g.nodes(data=True))]
