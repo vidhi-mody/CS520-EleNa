@@ -17,6 +17,11 @@ import numpy as np
 app = Flask(__name__)
 CORS(app)
 
+"""
+This is the start point of the application. Parsing of data and calling the appropriate routing algorithm is done in this file.
+"""
+
+
 @app.route('/route', methods=['POST'])
 def get_route():
     try:
@@ -33,6 +38,8 @@ def get_route():
     result = get_route_details(source, destination, place, percent, route_type)
     result = jsonify(result)
     return result
+
+
 '''
 Function to validate the parameters received: Source, destination, place, percent, min/max type
 '''
@@ -51,9 +58,14 @@ def validate_params(source, destination, percent ,route_type):
 
     return (False, "No Error")
 
+
+
+
 '''
 Function to return the route that can be taken, in addition to the distance to be covered and total elevation in that route. Algorithms used for route detection are dijkstra and A star.
 '''
+
+
 def get_route_details(source, destination, place, percent, route_type):
     source_latitude = float(source[0])
     source_longitude = float(source[1])
@@ -90,8 +102,15 @@ def get_route_details(source, destination, place, percent, route_type):
             result[i]['dist_from_start'] = node_distances[i]
     return result, path_distance, path_elevation
 
+
+
 '''
 Running on port 8080
 '''
+
+
 if __name__ == "__main__":
     app.run(port=8080)
+    
+    
+ 
