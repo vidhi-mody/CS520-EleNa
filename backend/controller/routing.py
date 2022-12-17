@@ -7,6 +7,12 @@ This file returns the optimal path according to Dijikstra or Astar .
 These algorithms considers elevation as well as distance in percentage to consider while navigation
 """
 
+
+
+"""
+Modified Dijikstra algorithm accorging to elevation gain and distance
+"""
+
 def get_dijkstra_route(graph, source, destination, max_distance, route_type):
     if route_type == 'min':
         max_flag = False
@@ -27,6 +33,11 @@ def get_dijkstra_route(graph, source, destination, max_distance, route_type):
         distance += graph[path[i]][path[i+1]][0]['length']
     return path, distance, elevation
 
+
+
+"""
+Modified elevation_based_dijkstra algorithm accorging to elevation gain and distance
+"""
 def elevation_based_dijkstra(graph, start, end, max_distance, route_type):
 
         elevations = collections.defaultdict(int) #elevation dictionary
@@ -74,7 +85,9 @@ def elevation_based_dijkstra(graph, start, end, max_distance, route_type):
             final_path.append(current_node)
         final_final_path=final_path[::-1]
         return list(final_final_path)
-
+"""
+Modified Astar  algorithm accorging to elevation gain and distance
+"""
 def get_a_star(graph, start, end, max_distance, route_type):
         elevations = collections.defaultdict(int)
         distances = collections.defaultdict(int) 
