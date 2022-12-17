@@ -31,10 +31,11 @@ def get_route():
         return error_message
 
     result = get_route_details(source, destination, place, percent, route_type)
-    #result=a_star(source,destination,place)
     result = jsonify(result)
     return result
-
+'''
+Function to validate the parameters received: Source, destination, place, percent, min/max type
+'''
 def validate_params(source, destination, percent ,route_type):
     if len(source)!=2:
         return (True, "Source not correct.")
@@ -50,6 +51,9 @@ def validate_params(source, destination, percent ,route_type):
 
     return (False, "No Error")
 
+'''
+Function to return the route that can be taken, in addition to the distance to be covered and total elevation in that route. Algorithms used for route detection are dijkstra and A star.
+'''
 def get_route_details(source, destination, place, percent, route_type):
     source_latitude = float(source[0])
     source_longitude = float(source[1])
@@ -68,7 +72,6 @@ def get_route_details(source, destination, place, percent, route_type):
     dijkstra_distance = single_source_dijkstra(graph_with_elevations, source_node, destination_node, weight='length')
     path_nodes = get_a_star(graph_with_elevations, source_node, destination_node, dijkstra_distance[0] * percent/100, route_type)
     path_nodes, path_distance, path_elevation = get_dijkstra_route(graph_with_elevations, source_node, destination_node, dijkstra_distance[0] * percent/100, route_type)
-    
 
     graph_nodes = graph_with_elevations.nodes()
     node_distances = [0.0]
@@ -87,5 +90,8 @@ def get_route_details(source, destination, place, percent, route_type):
             result[i]['dist_from_start'] = node_distances[i]
     return result, path_distance, path_elevation
 
+'''
+Running on port 8080
+'''
 if __name__ == "__main__":
     app.run(port=8080)
